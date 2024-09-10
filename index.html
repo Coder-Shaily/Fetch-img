@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dog Image Fetcher</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+        button:active {
+            background-color: #3e8e41;
+        }
+        #backButton {
+            background-color: #ff6347;
+        }
+        #backButton:hover {
+            background-color: #ff4500;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.02);
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+            button {
+                width: 100%;
+                margin: 10px 0;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fetch a Random Dog Image</h1>
+        <div class="button-group">
+            <button id="fetchButton">Fetch Dog Image</button>
+            <button id="backButton">Back to Homepage</button>
+        </div>
+        <div id="displayArea">
+            <p id="errorMessage" class="error"></p>
+            <img id="dogImage" src="" alt="Dog Image" style="display:none;">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("fetchButton").addEventListener("click", fetchDogImage);
+        document.getElementById("backButton").addEventListener("click", goBack);
+
+        function fetchDogImage() {
+            const displayArea = document.getElementById("dogImage");
+            const errorMessage = document.getElementById("errorMessage");
+
+            // Clear any previous data
+            displayArea.style.display = "none";
+            errorMessage.textContent = "";
+
+            fetch("https://dog.ceo/api/breeds/image/random")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Display the fetched dog image
+                    displayArea.src = data.message;
+                    displayArea.style.display = "block";
+                })
+                .catch(error => {
+                    // Handle and display any errors
+                    errorMessage.textContent = `Error fetching data: ${error.message}`;
+                });
+        }
+
+        function goBack() {
+            // Redirect to the homepage
+            window.location.href = '/'; // Change this URL to your homepage URL if needed
+        }
+    </script>
+</body>
+</html>
